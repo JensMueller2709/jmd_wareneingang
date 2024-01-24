@@ -1,0 +1,23 @@
+<div class="login-container">
+  <h4 class="card-header">Login</h4>
+  <form [formGroup]="LoginForm">
+    <div class="form-group">
+  <div class="mb-3 row">
+    <label class="col-sm-2 col-form-label" for="nameInput">Nutzername</label>
+    <div class="col-sm-20">
+      <input type="text" class="form-control" id="NutzernameInput" formControlName="NutzernameInput"
+      (change)="onChangeUsername($event)">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label class="col-sm-2 col-form-label" for="nameInput">Passwort</label>
+    <div class="col-sm-20">
+      <input type="password" class="form-control" id="PasswordInput" formControlName="PasswordInput"
+      (change)="onChangePassword($event)">
+    </div>
+  
+
+</div>
+  <button class="btn btn-primary" (click)="login()">Einloggen</button>
+
+</div>

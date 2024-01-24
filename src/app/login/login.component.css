@@ -1,0 +1,8 @@
+.login-container {
+  display: flex;
+  justify-content: center top;
+  align-items: center;
+  flex-direction: column;
+  height: 82vh;
+}
+

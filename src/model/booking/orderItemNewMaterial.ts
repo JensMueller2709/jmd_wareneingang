@@ -1,0 +1,31 @@
+import { OrderItem } from "./orderItem";
+
+export interface OrderItemNewMaterial extends OrderItem {
+    PoManu : "X",
+    Vendor : string,
+    Material: string,
+    Plant : "9600",
+    StgeLoc : "1012",
+    DeleteInd : "",
+    ShortText : string,
+    VendMat : "",
+    Quantity : string,
+    PoUnit : string,
+    PoUnitIso : string,
+    OrderprUn : string,
+    OrderprUnIso : string,
+    ConvNum1 : "1",
+    ConvDen1 : "1",
+    ConvNum2 : "1",
+    ConvDen2 : "1",
+    ItemCat : "0",
+    Acctasscat : "",
+    FreeItem : false,
+    Agreement : string,
+    AgmtItem : "0",
+    Batch : "",
+    Vendrbatch : "",
+    SupplStloc : "",
+    EanUpc : "",
+    CreatedOn : string
+}

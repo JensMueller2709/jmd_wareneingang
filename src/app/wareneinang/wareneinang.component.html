@@ -1,0 +1,383 @@
+<div class="bestellung">
+  <div class="bestellung-container">
+    <div *ngIf="!showSelectedOrder">
+      <h1>Bestellung auswählen</h1>
+      <form [formGroup]="BestellungForm">
+        <div class="form-group">
+          <label for="nameInput">Bestellnummer</label>
+          <input type="number" class="form-control" id="BestellnummerNumberInput"
+            formControlName="BestellnummerNumberInput" (keyup.enter)="fetchOrder()">
+        </div>
+      </form>
+      <button class="btn btn-primary" (click)="fetchOrder()">Suchen</button>
+      <button class="btn btn-primary" (click)="extendSearch()">Erweiterte Suche</button>
+    </div>
+
+    <div *ngIf="extendedSearch">
+      <form [formGroup]="lieferantennummerForm">
+        <div class="form-group">
+          <label for="nameInput">Lieferantennummer</label>
+          <input type="number" class="form-control" id="LieferantennummerNumberInput"
+            formControlName="LieferantennummerNumberInput">
+        </div>
+      </form>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalOpenOrders"
+        (click)="fetchOrderBySupplierNumber()">Suchen</button>
+    </div>
+
+    <div *ngIf="showSelectedOrder">
+
+      <div class="container">
+        <div class="row ">
+         
+
+          <div class="col-lg-4 col-md-12">
+            <div class="card text-start">
+              <div class="card-body">
+                 <!--
+                <p class="card-text"><b>Nutzer:</b> {{username}}</p>
+                <p class="card-text"><b>Bestellnr:</b> {{orderNumber}}</p>
+                <p class="card-text"><b>Lieferant:</b> {{supplierNumber}} {{supplierName}}</p>
+                 -->
+                <p class="card-text"><b>Lieferscheinnummer:</b> <input class="form-control"
+                    [(ngModel)]="lieferscheinNummer"></p>
+              </div>
+            </div>
+          </div>
+         
+
+          <div class="col-lg-4 col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <form [formGroup]="addMaterialForm">
+                  <div>
+
+                    <input type="text" class="form-control" id="matNumberInput" formControlName="matNumberInput"
+                      placeholder="Materialnummer">
+
+                    <input type="text" class="form-control" id="eanInput" formControlName="eanInput" placeholder="EAN">
+
+                    <input type="number" class="form-control" id="amountInput" placeholder="Menge"
+                      formControlName="amountInput" #amountInput>
+                  </div>
+                  <button class="btn btn-primary" style="margin-left: 30%; margin-right: 30%; width: 40%"
+                    (click)="addMaterial()">Hinzufügen</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <button class="btn btn-success" style="width: 20%;" (click)="openAreYouSureToBookModal()">Wareneingang
+        buchen</button>
+      <button class="btn btn-danger" style="width: 20%;" (click)="openAreYouSureToCancelModal()">Abbrechen</button>
+
+
+
+      <hr>
+
+      <div class="table-wrap">
+        <table class="table table-responsive table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Pos</th>
+              <th scope="col">Materialnummer</th>
+              <th scope="col">Bezeichnung</th>
+              <th scope="col">Einheit</th>
+              <th scope="col">Bestellmenge</th>
+              <th scope="col">Istmenge</th>
+              <th scope="col">Gratis</th>
+              <th scope="col">Löschen</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let mat of dataSource; let i = index">
+              <tr (click)="displayMaterial(mat)">
+                <td>{{mat.position}}</td>
+                <td>{{mat.materialNumber}}</td>
+                <td>{{mat.name}}</td>
+                <td>{{mat.unit}}</td>
+                <td>{{mat.sollAmount}}</td>
+                <td [class]="mat.isAmount != mat.sollAmount ? 'diffMat' : 'okMat'">{{mat.isAmount}}</td>
+                <td>
+                  <div>
+                    <div *ngIf="mat.PoManu == 'X'">
+                      <div class="form-check checkbox">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate"
+                          (change)="changeIsFree(mat)">
+                        <label class="form-check-label" for="flexCheckIndeterminate">
+                        </label>
+                      </div>
+                    </div>
+                    <div *ngIf="mat.PoManu != 'X' && mat.free">
+                      <div class="form-check checkbox">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" checked
+                          disabled>
+                        <label class="form-check-label" for="flexCheckIndeterminate">
+                        </label>
+                      </div>
+                    </div>
+                    <div *ngIf="mat.PoManu != 'X' && !mat.free">
+                      <div class="form-check checkbox">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate" disabled>
+                        <label class="form-check-label" for="flexCheckIndeterminate">
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td> <button class="btnDeleteItem" (click)="openAreYouSureToDeleteModal(mat)" *ngIf="mat.PoManu == 'X'">
+                    <!--
+                   <img src="../../assets/clear_black_24dp.svg"
+                    alt="Löschen" />
+                  -->
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalOpenOrders">
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalOpenOrdersLabel">Offene Bestellungen</h1>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Bestellnummer</th>
+              <th scope="col">Auswahl</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let best of dataSourceBestellung; let i = index">
+              <tr>
+                <td style="font-size: large;">Bestellung: {{best}}</td>
+                <td><button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseOrder"
+                    role="button">Material anzeigen</button></td>
+                <td><button class="btn btn-primary" data-bs-dismiss="modal"
+                    (click)="fetchOrderByNumber(best)">Auswahl</button></td>
+              </tr>
+
+              <div id="collapseOrder" class="collapse">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Pos</th>
+                      <th scope="col">Materialnummer</th>
+                      <th scope="col">Bezeichnung</th>
+                      <th scope="col">Einheit</th>
+                      <th scope="col">Bestellmenge</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <ng-container *ngFor="let mat of orders.get(best);">
+                      <tr>
+                        <td>{{mat.position}}</td>
+                        <td>{{mat.materialNumber}}</td>
+                        <td>{{mat.name}}</td>
+                        <td>{{mat.unit}}</td>
+                        <td>{{mat.sollAmount}}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+
+                </table>
+              </div>
+            </ng-container>
+          </tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': displayPositionModal, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Es gibt mehrere Positionen zu dem Material. Bitte wähle eine Position aus.</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Position</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let pos of displayedPositions; let i = index">
+              <tr>
+                <td style="font-size: large;">Position: {{pos}}</td>
+                <td><button class="btn btn-primary" data-bs-dismiss="modal" (click)="selectPosition(pos)"
+                    data-dismiss="modal">Auswahl</button></td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" (click)="closeSelectPositionModal()"
+          data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': displayEANModal, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Welches Material zur EAN soll verwendet werden?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Material</th>
+              <th scope="col">Einheit</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let mat of displayedMaterials; let i = index">
+              <tr>
+                <td style="font-size: large;">{{mat.materialNumber}}</td>
+                <td style="font-size: large;"> {{mat.unit}}</td>
+                <td><button class="btn btn-primary" data-bs-dismiss="modal" (click)="selectEANMaterial(mat)"
+                    data-dismiss="modal">Auswahl</button></td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" (click)="closeEANModal()" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': displaySupplierModal, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Bitte gebe eine Lieferscheinnummer ein</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Lieferscheinnummer</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container>
+              <input class="form-control" type="text" id="lieferscheinNummerInput" [(ngModel)]="lieferscheinNummer"
+                #lieferscheinNummerInput (keyup.enter)="setSupplierNumber()">
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-success" (click)="setSupplierNumber()"
+          data-dismiss="modal">Speichern</button>
+
+        <button type="button" class="btn btn-danger" (click)="closeSupplierModal()"
+          data-dismiss="modal">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': areYouSureToBook, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Möchtest du buchen?</h5>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-success" (click)="book()" data-dismiss="modal">Ja</button>
+
+        <button type="button" class="btn btn-danger" (click)="closeAreYouSureToBookModal()"
+          data-dismiss="modal">Nein</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': areYouSureToCancel, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Möchtest du den Wareneingang abbrechen?</h5>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-success" (click)="cancel()" data-dismiss="modal">Ja</button>
+
+        <button type="button" class="btn btn-danger" (click)="closeAreYouSureToCancelModal()"
+          data-dismiss="modal">Nein</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': areYouSureToDelete, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Möchtest du den Artikel löschen?</h5>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-success" (click)="deleteSelectedMaterial()"
+          data-dismiss="modal">Ja</button>
+
+        <button type="button" class="btn btn-danger" (click)="closeAreYouSureToDeleteModal()"
+          data-dismiss="modal">Nein</button>
+      </div>
+    </div>
+  </div>
+</div>

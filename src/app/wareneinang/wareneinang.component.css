@@ -1,0 +1,59 @@
+
+  .bestellung{
+    justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 82vh;
+  }
+
+    .bestellung-container{
+      margin: 40px;
+    }
+
+    .bestellung-table {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .btn{
+      height: 50px;
+      margin: 10px;
+      align-items: center;
+    }
+
+    .btn-sm{
+      height: auto;
+      margin: 10px;
+      align-items: center;
+    }
+
+    .btnDeleteItem{
+      display: flex;/*Flex box property*/ 
+      height: 24px;
+      width: 24px;
+      margin-left: 30px;
+      background-color: #d81e1e;
+    }
+
+    .table-wrap {
+      max-height: 800px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    .checkbox{ 
+      display: flex;/*Flex box property*/ 
+      margin-left: 45%;
+    } 
+    input{ 
+      margin: auto;  
+      /*setting margin to auto of the cheeckbox*/ 
+      display: flex;/*Flex box property*/ 
+    } 
+    
+    .diffMat{
+      background-image: linear-gradient(to right, white 0%, rgb(240, 110, 110) 50%)
+    }
+    .okMat{
+      background-image: linear-gradient(to right, white 0%, rgb(85, 235, 135) 50%)
+    }

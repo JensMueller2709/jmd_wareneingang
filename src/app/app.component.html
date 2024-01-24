@@ -1,0 +1,38 @@
+<style>
+</style>
+<nav class="navbar navbar-expand-sm navbar-custom" style="background-color: #93c4e0;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img width="130" alt="JMD" src="./assets/Logo_JMD.png" style="background-color:transparent" />
+    </a>
+    <span class="navbar-text" style="font-size: 30px">Wareneingang App</span>
+
+    <span class="navbar-text" style="font-size: 15px;  margin-left: 10px; align-items: flex-end;">{{title}}</span>
+
+    <div class="collapse navbar-collapse" style="margin-left: 60px;" id="navbarText">
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <!--
+      <div style="margin-right: 100px; font-size: larger; font-weight: bold;">
+        User: {{userName}}
+      </div>
+      -->
+      <button class="btn btn-outline-danger" type="submit" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- Footer 
+<footer class="footer-bs bg-dark text-center text-white">
+  <div class="container-fluid">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      Version 0.0.4
+    </div>
+  </div>
+</footer>
+-->
+<!-- Footer -->

@@ -1,0 +1,138 @@
+{
+    "d" : {
+      "__metadata" : {
+        "id" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderSet(guid'005056BF-1163-1EDE-8A8E-C741DEE23153')",
+        "uri" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderSet(guid'005056BF-1163-1EDE-8A8E-C741DEE23153')",
+        "type" : "ZMM_API_PURCHASEORDER_SERVICE_SRV.PurchaseOrder"
+      },
+      "PoGuid" : "005056BF-1163-1EDE-8A8E-C741DEE23153",
+      "PurchaseOrderResultSet" : {
+        "results" : [
+          {
+            "__metadata" : {
+              "id" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderResultSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149753')",
+              "uri" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderResultSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149753')",
+              "type" : "ZMM_API_PURCHASEORDER_SERVICE_SRV.PurchaseOrderResult"
+            },
+            "PoGuid" : "005056BF-1163-1EDE-8A8E-C741DEE23153",
+            "PoNumber" : "4500149753",
+            "Type" : "E",
+            "Id" : "VHUAP",
+            "Number" : "262",
+            "Message" : "Belieferung momentan nicht möglich, da Bestellung gesperrt",
+            "LogNo" : "",
+            "LogMsgNo" : "000000",
+            "MessageV1" : "",
+            "MessageV2" : "",
+            "MessageV3" : "",
+            "MessageV4" : "",
+            "Parameter" : "",
+            "Row" : 0,
+            "Field" : "",
+            "System" : "LGSBPE010"
+          },
+          {
+            "__metadata" : {
+              "id" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderResultSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149751')",
+              "uri" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderResultSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149751')",
+              "type" : "ZMM_API_PURCHASEORDER_SERVICE_SRV.PurchaseOrderResult"
+            },
+            "PoGuid" : "005056BF-1163-1EDE-8A8E-C741DEE23153",
+            "PoNumber" : "4500149751",
+            "Type" : "E",
+            "Id" : "VHUAP",
+            "Number" : "262",
+            "Message" : "Belieferung momentan nicht möglich, da Bestellung gesperrt",
+            "LogNo" : "",
+            "LogMsgNo" : "000000",
+            "MessageV1" : "",
+            "MessageV2" : "",
+            "MessageV3" : "",
+            "MessageV4" : "",
+            "Parameter" : "",
+            "Row" : 0,
+            "Field" : "",
+            "System" : "LGSBPE010"
+          }
+        ]
+      },
+      "PurchaseOrderItemSet" : {
+        "results" : [
+          {
+            "__metadata" : {
+              "id" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderItemSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149753',PoItem='X00010')",
+              "uri" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderItemSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149753',PoItem='X00010')",
+              "type" : "ZMM_API_PURCHASEORDER_SERVICE_SRV.PurchaseOrderItem"
+            },
+            "PoGuid" : "005056BF-1163-1EDE-8A8E-C741DEE23153",
+            "PoNumber" : "4500149753",
+            "PoItem" : "X00010",
+            "PoManu" : "X",
+            "Vendor" : "16521",
+            "Material" : "7007919",
+            "Plant" : "1000",
+            "StgeLoc" : "1012",
+            "DeleteInd" : "",
+            "ShortText" : "Dicolobe Star Track HT 132",
+            "VendMat" : "",
+            "Quantity" : "6000.000",
+            "PoUnit" : "KG",
+            "PoUnitIso" : "KGM",
+            "OrderprUn" : "KG",
+            "OrderprUnIso" : "KGM",
+            "ConvNum1" : "1",
+            "ConvDen1" : "1",
+            "ConvNum2" : "1",
+            "ConvDen2" : "1",
+            "ItemCat" : "0",
+            "Acctasscat" : "",
+            "FreeItem" : false,
+            "Agreement" : "4600000163",
+            "AgmtItem" : "0",
+            "Batch" : "",
+            "Vendrbatch" : "",
+            "SupplStloc" : "",
+            "EanUpc" : "",
+            "CreatedOn" : "\/Date(1091059200000)\/"
+          },
+          {
+            "__metadata" : {
+              "id" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderItemSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149751',PoItem='00020')",
+              "uri" : "http://SVMLWBPE01.mysug.de/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/PurchaseOrderItemSet(PoGuid=guid'005056BF-1163-1EDE-8A8E-C741DEE23153',PoNumber='4500149751',PoItem='00020')",
+              "type" : "ZMM_API_PURCHASEORDER_SERVICE_SRV.PurchaseOrderItem"
+            },
+            "PoGuid" : "005056BF-1163-1EDE-8A8E-C741DEE23153",
+            "PoNumber" : "4500149751",
+            "PoItem" : "00020",
+            "PoManu" : "",
+            "Vendor" : "",
+            "Material" : "",
+            "Plant" : "",
+            "StgeLoc" : "",
+            "DeleteInd" : "",
+            "ShortText" : "",
+            "VendMat" : "",
+            "Quantity" : "6000.000",
+            "PoUnit" : "KG",
+            "PoUnitIso" : "",
+            "OrderprUn" : "",
+            "OrderprUnIso" : "",
+            "ConvNum1" : "0",
+            "ConvDen1" : "0",
+            "ConvNum2" : "0",
+            "ConvDen2" : "0",
+            "ItemCat" : "",
+            "Acctasscat" : "",
+            "FreeItem" : false,
+            "Agreement" : "",
+            "AgmtItem" : "",
+            "Batch" : "",
+            "Vendrbatch" : "",
+            "SupplStloc" : "",
+            "EanUpc" : "",
+            "CreatedOn" : null
+          }
+        ]
+      }
+    }
+  }
