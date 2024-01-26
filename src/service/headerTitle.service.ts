@@ -13,8 +13,13 @@ export class HeaderTitleService {
     return this.title.getValue();
   }
 
-  addTitle(title: string){
-    this.title.next(this.getTitle() + " - " + title);
+  // create a function for adding words to the title string by adding a hyphen between them. The first word is not followed by a hyphen.
+  addTitle(title: string) {
+    if (this.title.getValue() === "") {
+      this.title.next(title);
+    } else {
+      this.title.next(this.title.getValue() + " - " + title);
+    }
   }
 
 }

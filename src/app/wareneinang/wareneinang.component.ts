@@ -20,6 +20,7 @@ import { HeaderTitleService } from 'src/service/headerTitle.service';
   styleUrls: ['./wareneinang.component.css']
 })
 export class WareneinangComponent implements OnInit {
+  
   constructor(private userService: AccountService,
     private cookieService: CookieService,
     private router: Router,
@@ -62,6 +63,7 @@ export class WareneinangComponent implements OnInit {
   selectedPosition: number = -1;
 
   displayedMaterials : Material[] = [];
+  materialsWithDifference: Material[] | undefined;
 
   displayPositionModal: string = "none";
   displaySupplierModal = "none";
@@ -69,6 +71,7 @@ export class WareneinangComponent implements OnInit {
   areYouSureToBook = "none";
   areYouSureToCancel = "none";
   areYouSureToDelete = "none";
+  showDifferencesModal = 'none';
 
   openEANModal(): void {
     this.displayEANModal = "block";
@@ -111,6 +114,14 @@ export class WareneinangComponent implements OnInit {
   closeAreYouSureToDeleteModal(){
     this.areYouSureToDelete = "none";
     this.deleteMaterial = undefined;
+  }
+
+  closeShowDifferencesModal() {
+    this.showDifferencesModal = 'none';
+  }
+
+  openShowDifferencesModal() {
+    this.showDifferencesModal = 'block';
   }
 
   displayedColumns: string[] =
@@ -246,6 +257,8 @@ export class WareneinangComponent implements OnInit {
   displayMaterial(mat: Material) {
     if (mat.materialNumber != null) {
       this.addMaterialForm.controls['matNumberInput'].setValue(mat.materialNumber?.toString());
+      this.addMaterialForm.controls['eanInput'].setValue("");
+      this.addMaterialForm.controls['amountInput'].setValue("");
       this.focusOnAmountInput();
     }
   }
@@ -476,7 +489,11 @@ export class WareneinangComponent implements OnInit {
     }
   }
 
-  book() {
+  computeAllMaterialsWithDifference() { 
+    this.materialsWithDifference = this.materials?.filter(material => material.isAmount !== material.sollAmount);
+  }
+
+  prepareBooking() {
     if (this.orderNumber == null) {
       this.toastr.warning("Bitte gib eine Bestellnummer an");
       return;
@@ -485,6 +502,15 @@ export class WareneinangComponent implements OnInit {
       this.toastr.warning("Bitte gib eine Lieferscheinnummer an");
       return;
     }
+    this.computeAllMaterialsWithDifference();
+    this.closeAreYouSureToBookModal();
+    if(this.materialsWithDifference?.length != 0){
+      this.openShowDifferencesModal();  
+    }
+    this.closeAreYouSureToBookModal();
+  }
+
+  book() {
     this.orderToBook = {
       PurchaseOrderItemSet: [],
       PurchaseOrderResultSet: []
@@ -495,11 +521,13 @@ export class WareneinangComponent implements OnInit {
         this.materialToOrderItem(mat)
       )
     })
+    this.closeShowDifferencesModal();
     this.bookToSAP(this.orderToBook);
-    this.closeAreYouSureToBookModal();
+    
   }
 
   materialToOrderItem(mat: Material): OrderItem {
+    const DEFAULT_PLANT = "9600";
     if (mat.PoManu == "X") {
       return {
         PoItem: mat.position?.toString(),
@@ -508,7 +536,7 @@ export class WareneinangComponent implements OnInit {
         Quantity: mat.isAmount?.toString(),
         DeliveryRefnumber: this.lieferscheinNummer,
         Material: mat.materialNumber,
-        Plant: "9600",
+        Plant: DEFAULT_PLANT,
         PoManu: "X",
         StgeLoc: mat.lagerort
       }
@@ -520,7 +548,7 @@ export class WareneinangComponent implements OnInit {
         Quantity: mat.isAmount?.toString(),
         DeliveryRefnumber: this.lieferscheinNummer,
         Material: mat.materialNumber,
-        Plant: "9600",
+        Plant: DEFAULT_PLANT,
         PoManu: "",
         StgeLoc: mat.lagerort
       }
@@ -597,6 +625,10 @@ export class WareneinangComponent implements OnInit {
     this.BestellungForm.reset();
     this.addMaterialForm.reset();
     this.lieferantennummerForm.reset();
+    this.displayedMaterials = [];
+    this.materials = [];
+    this.orders = new Map<string, Material[]>();
+    this.dataSourceBestellung = [];
   }
 
   extendSearch() {
@@ -678,4 +710,5 @@ export class WareneinangComponent implements OnInit {
       lagerort: data["SlocExprc"]
     }
   }
+
 }

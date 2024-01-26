@@ -28,55 +28,43 @@
     <div *ngIf="showSelectedOrder">
 
       <div class="container">
-        <div class="row ">
-         
-
-          <div class="col-lg-4 col-md-12">
+        <div class="row">
+          <div class="col-lg-3 col-md-12">
             <div class="card text-start">
               <div class="card-body">
-                 <!--
-                <p class="card-text"><b>Nutzer:</b> {{username}}</p>
-                <p class="card-text"><b>Bestellnr:</b> {{orderNumber}}</p>
-                <p class="card-text"><b>Lieferant:</b> {{supplierNumber}} {{supplierName}}</p>
-                 -->
                 <p class="card-text"><b>Lieferscheinnummer:</b> <input class="form-control"
                     [(ngModel)]="lieferscheinNummer"></p>
               </div>
             </div>
           </div>
-         
-
-          <div class="col-lg-4 col-md-12">
-            <div class="card">
-              <div class="card-body">
-                <form [formGroup]="addMaterialForm">
-                  <div>
-
-                    <input type="text" class="form-control" id="matNumberInput" formControlName="matNumberInput"
-                      placeholder="Materialnummer">
-
-                    <input type="text" class="form-control" id="eanInput" formControlName="eanInput" placeholder="EAN">
-
-                    <input type="number" class="form-control" id="amountInput" placeholder="Menge"
-                      formControlName="amountInput" #amountInput>
-                  </div>
-                  <button class="btn btn-primary" style="margin-left: 30%; margin-right: 30%; width: 40%"
-                    (click)="addMaterial()">Hinzufügen</button>
-                </form>
+          <div class="col-lg-6 col-md-12">
+            <form [formGroup]="addMaterialForm">
+              <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" id="matNumberInput" formControlName="matNumberInput"
+                    placeholder="Materialnummer">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="eanInput" formControlName="eanInput" placeholder="EAN">
+                </div>
+                <div class="col">
+                  <input type="number" class="form-control" id="amountInput" placeholder="Menge"
+                    formControlName="amountInput">
+                </div>
               </div>
-            </div>
+              <button class="btn btn-primary" (click)="addMaterial()">Hinzufügen</button>
+
+
+            </form>
+          </div>
+          <div class="col-lg-3 col-md-12">
+            <button class="btn btn-success" style="width: 100%;" (click)="openAreYouSureToBookModal()">Wareneingang
+              buchen</button>
+            <button class="btn btn-danger" style="width: 100%;"
+              (click)="openAreYouSureToCancelModal()">Abbrechen</button>
           </div>
         </div>
       </div>
-
-
-
-
-      <button class="btn btn-success" style="width: 20%;" (click)="openAreYouSureToBookModal()">Wareneingang
-        buchen</button>
-      <button class="btn btn-danger" style="width: 20%;" (click)="openAreYouSureToCancelModal()">Abbrechen</button>
-
-
 
       <hr>
 
@@ -165,16 +153,64 @@
           </thead>
 
           <tbody>
+
             <ng-container *ngFor="let best of dataSourceBestellung; let i = index">
               <tr>
                 <td style="font-size: large;">Bestellung: {{best}}</td>
-                <td><button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseOrder"
-                    role="button">Material anzeigen</button></td>
+                <td>
+                  <button class="btn btn-primary" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseOrder' + i" role="button">
+                    Material anzeigen/ausblenden
+                  </button>
+                </td>
                 <td><button class="btn btn-primary" data-bs-dismiss="modal"
                     (click)="fetchOrderByNumber(best)">Auswahl</button></td>
               </tr>
 
-              <div id="collapseOrder" class="collapse">
+              <tr [id]="'collapseOrder' + i" class="collapse">
+                <td colspan="3">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Pos</th>
+                        <th scope="col">Materialnummer</th>
+                        <th scope="col">Bezeichnung</th>
+                        <th scope="col">Einheit</th>
+                        <th scope="col">Bestellmenge</th>
+                      </tr>
+                    </thead>
+  
+                    <tbody>
+                      <ng-container *ngFor="let mat of orders.get(best);">
+                        <tr>
+                          <td>{{mat.position}}</td>
+                          <td>{{mat.materialNumber}}</td>
+                          <td>{{mat.name}}</td>
+                          <td>{{mat.unit}}</td>
+                          <td>{{mat.sollAmount}}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+
+            <!--
+            <ng-container *ngFor="let best of dataSourceBestellung; let i = index">
+              <tr>
+                <td style="font-size: large;">Bestellung: {{best}}</td>
+                <td>
+                  <button class="btn btn-primary" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseOrder' + i" role="button">
+                    Material anzeigen/ausblenden
+                  </button>
+                </td>
+                    
+                <td><button class="btn btn-primary" data-bs-dismiss="modal"
+                    (click)="fetchOrderByNumber(best)">Auswahl</button></td>
+                    
+              </tr>
+
+              <div [id]="'collapseOrder' + i" class="collapse">
                 <table class="table table-striped">
                   <thead>
                     <tr>
@@ -197,10 +233,10 @@
                       </tr>
                     </ng-container>
                   </tbody>
-
                 </table>
               </div>
             </ng-container>
+            -->
           </tbody>
         </table>
 
@@ -263,6 +299,7 @@
           <thead>
             <tr>
               <th scope="col">Material</th>
+              <th scope="col">Bezeichnung</th>
               <th scope="col">Einheit</th>
             </tr>
           </thead>
@@ -271,6 +308,7 @@
             <ng-container *ngFor="let mat of displayedMaterials; let i = index">
               <tr>
                 <td style="font-size: large;">{{mat.materialNumber}}</td>
+                <td style="font-size: large;">{{mat.name}}</td>
                 <td style="font-size: large;"> {{mat.unit}}</td>
                 <td><button class="btn btn-primary" data-bs-dismiss="modal" (click)="selectEANMaterial(mat)"
                     data-dismiss="modal">Auswahl</button></td>
@@ -334,7 +372,7 @@
       </div>
       <div class="modal-footer">
 
-        <button type="button" class="btn btn-success" (click)="book()" data-dismiss="modal">Ja</button>
+        <button type="button" class="btn btn-success" (click)="prepareBooking()" data-dismiss="modal">Ja</button>
 
         <button type="button" class="btn btn-danger" (click)="closeAreYouSureToBookModal()"
           data-dismiss="modal">Nein</button>
@@ -377,6 +415,40 @@
 
         <button type="button" class="btn btn-danger" (click)="closeAreYouSureToDeleteModal()"
           data-dismiss="modal">Nein</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': showDifferencesModal, 'opacity': 1}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Materialien mit Differenzen</h5>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Materialnummer</th>
+              <th>Materialname</th>
+              <th>Soll-Menge</th>
+              <th>Ist-Menge</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let material of materialsWithDifference">
+              <td>{{material.materialNumber}}</td>
+              <td>{{material.name}}</td>
+              <td>{{material.sollAmount}}</td>
+              <td>{{material.isAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="book()">Akzeptieren</button>
+        <button type="button" class="btn btn-danger" (click)="closeShowDifferencesModal()">Abbrechen</button>
       </div>
     </div>
   </div>
