@@ -27,6 +27,7 @@ export class AppComponent implements OnInit{
     this.cookieService.delete("password");
     this.router.navigate(['/Login']);
     this.userName ="";
+    this.headerTitleService.setTitle(this.userName);
   }
 
  
