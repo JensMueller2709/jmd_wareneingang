@@ -40,7 +40,7 @@
           },
           "configurations": {
             "production": {
-              "outputPath": "dist/jmd-wareneingang-production",
+              "outputPath": "dist/jmd-wareneingang-bpt",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -62,7 +62,7 @@
               "outputHashing": "all"
             },
             "test": {
-              "outputPath": "dist/jmd-wareneingang-test",
+              "outputPath": "dist/jmd-wareneingang-bpe",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
