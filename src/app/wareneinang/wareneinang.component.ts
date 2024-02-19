@@ -287,6 +287,11 @@ export class WareneinangComponent implements OnInit {
       this.selectedPosition = -1
       this.displayedPositions = [];
     }
+    //clear input fields 
+    this.addMaterialForm.controls['matNumberInput'].setValue("");
+    this.addMaterialForm.controls['eanInput'].setValue("");
+    this.addMaterialForm.controls['amountInput'].setValue("");
+    
   }
 
   selectPosition(pos: number) {
