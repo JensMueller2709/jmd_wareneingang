@@ -9,7 +9,10 @@ import { HeaderTitleService } from 'src/service/headerTitle.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  constructor(private cookieService: CookieService, private router: Router, private headerTitleService: HeaderTitleService) {
+  constructor(
+    private cookieService: CookieService, 
+    private router: Router, 
+    private headerTitleService: HeaderTitleService) {
   }
   userName : string = "";
   title = "";

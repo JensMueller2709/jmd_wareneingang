@@ -4,7 +4,7 @@ import { AccountService } from 'src/api/accountService';
 import { User } from 'src/model/user';
 import { MyCookieService } from 'src/api/cookieService';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { HeaderTitleService } from 'src/service/headerTitle.service';
 
 @Component({
@@ -30,33 +30,29 @@ export class LoginComponent {
 
   onChangeUsername(event: any) {
     this.username = event.target.value;
-    console.log(this.username);
   }
 
   onChangePassword(event: any) {
     this.password = event.target.value;
-    //console.log(this.password);
   }
 
   login() {
     this.userService.login(this.username, this.password)
-      .subscribe(data => {
-        console.log(JSON.stringify(data.body!));
-        this.parse(JSON.stringify(data.body!));
-        console.log("User " + this.user?.username)
-        console.log("Werk " + this.user?.werk)
-        this.cookieService.save("user", this.username,true);
-        this.cookieService.save("password", this.password,true);
-        this.toastr.success("Login erfolgreich", "");
-        this.router.navigate(['/Wareneingang']);
-        this.headerTitleService.setTitle(this.username + " - ");
-      },
-        error => {
+      .subscribe({
+        next: data => {
+          this.parse(JSON.stringify(data.body!));
+          this.cookieService.save("user", this.username);
+          this.cookieService.saveSecure("password", this.password);
+          this.toastr.success("Login erfolgreich", "");
+          this.router.navigate(['/Wareneingang']);
+          this.headerTitleService.setTitle(this.username + " - ");
+        },
+        error: error => {
           console.log(error)
           this.toastr.error(error.message, "Fehler");
           this.router.navigate(['/Wareneingang']);
         }
-      )
+      })
   }
 
   logout() {

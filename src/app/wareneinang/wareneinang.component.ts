@@ -1,18 +1,16 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
-import { AccountService } from 'src/api/accountService';
 import { Router } from '@angular/router';
 import { Order } from 'src/model/order';
 import { Material } from 'src/model/material';
 import { OrderService } from 'src/api/orderService';
 import { ToastrService } from 'ngx-toastr';
 
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MaterialService } from 'src/api/materialService';
 import { OrderToBook } from 'src/model/booking/orderToBook';
 import { OrderItem } from 'src/model/booking/orderItem';
-import { OrderItemNewMaterial } from 'src/model/booking/orderItemNewMaterial';
 import { HeaderTitleService } from 'src/service/headerTitle.service';
+import { MyCookieService } from 'src/api/cookieService';
 
 @Component({
   selector: 'app-wareneinang',
@@ -20,9 +18,9 @@ import { HeaderTitleService } from 'src/service/headerTitle.service';
   styleUrls: ['./wareneinang.component.css']
 })
 export class WareneinangComponent implements OnInit {
-  
-  constructor(private userService: AccountService,
-    private cookieService: CookieService,
+
+  constructor(
+    private cookieService: MyCookieService,
     private router: Router,
     private materialService: MaterialService,
     private orderService: OrderService,
@@ -62,7 +60,7 @@ export class WareneinangComponent implements OnInit {
   displayedPositions: number[] = [];
   selectedPosition: number = -1;
 
-  displayedMaterials : Material[] = [];
+  displayedMaterials: Material[] = [];
   materialsWithDifference: Material[] | undefined;
 
   displayPositionModal: string = "none";
@@ -90,28 +88,28 @@ export class WareneinangComponent implements OnInit {
     this.displayPositionModal = "none";
   }
 
-  openAreYouSureToBookModal(){
+  openAreYouSureToBookModal() {
     this.areYouSureToBook = "block";
   }
 
-  closeAreYouSureToBookModal(){
+  closeAreYouSureToBookModal() {
     this.areYouSureToBook = "none";
   }
 
-  openAreYouSureToCancelModal(){
+  openAreYouSureToCancelModal() {
     this.areYouSureToCancel = "block";
   }
 
-  closeAreYouSureToCancelModal(){
+  closeAreYouSureToCancelModal() {
     this.areYouSureToCancel = "none";
   }
 
-  openAreYouSureToDeleteModal(mat: Material){
+  openAreYouSureToDeleteModal(mat: Material) {
     this.areYouSureToDelete = "block";
     this.deleteMaterial = mat;
   }
 
-  closeAreYouSureToDeleteModal(){
+  closeAreYouSureToDeleteModal() {
     this.areYouSureToDelete = "none";
     this.deleteMaterial = undefined;
   }
@@ -147,9 +145,8 @@ export class WareneinangComponent implements OnInit {
       this.router.navigate(['/Login']);
     }
     this.username = this.cookieService.get("user");
-    this.password = this.cookieService.get("password");
+    this.password = this.cookieService.getSecure("password");
     this.newMaterialCounter = 0;
-    //console.log(this.cookieService.get("user"));
   }
 
   isLoggedIn(): boolean {
@@ -291,7 +288,7 @@ export class WareneinangComponent implements OnInit {
     this.addMaterialForm.controls['matNumberInput'].setValue("");
     this.addMaterialForm.controls['eanInput'].setValue("");
     this.addMaterialForm.controls['amountInput'].setValue("");
-    
+
   }
 
   selectPosition(pos: number) {
@@ -304,10 +301,10 @@ export class WareneinangComponent implements OnInit {
 
   selectEANMaterial(mat: Material) {
     this.closeEANModal();
-    var searchedMat = this.materials?.find((xmat) => (xmat.materialNumber?.toString() == mat.materialNumber?.toString() && 
-    mat.unit == xmat.unit));
+    var searchedMat = this.materials?.find((xmat) => (xmat.materialNumber?.toString() == mat.materialNumber?.toString() &&
+      mat.unit == xmat.unit));
     var amount = mat.isAmount;
-    if(searchedMat != null){
+    if (searchedMat != null) {
       this.calculateAmount(searchedMat, amount!);
     } else {
       this.createNewMaterial(mat, amount!);
@@ -358,13 +355,13 @@ export class WareneinangComponent implements OnInit {
     this.addMaterialForm.controls['amountInput'].setValue("");
   }
 
-  calculateAmount(mat: Material, amount: number){
+  calculateAmount(mat: Material, amount: number) {
     if (amount != null) {
-      if(amount == 0){
+      if (amount == 0) {
         mat.isAmount = 0;
       } else {
         mat.isAmount = mat.isAmount! + amount
-        
+
       }
       this.toastr.success("Materialmenge gesetzt", "Erfassung")
       //console.log("Material gesetzt: " + x.materialNumber + " = " + x.isAmount)
@@ -400,35 +397,35 @@ export class WareneinangComponent implements OnInit {
       },
         error => {
           console.log(error)
-         this.toastr.error(error.message, "Fehler")
+          this.toastr.error(error.message, "Fehler")
           return {};
         }
       )
     return {};
   }
 
-  private parseEANMaterials(data: any, amount : number) : Material[] {
+  private parseEANMaterials(data: any, amount: number): Material[] {
     try {
       var tmpMaterial = JSON.parse(JSON.stringify(data.body!));
       var name = tmpMaterial.d.results[0].MatlDesc;
-      var materials : Material[] = [];
-      tmpMaterial.d.results[0].toMean.results.forEach((x: any)  => {
-          materials.push(
-            {
-              materialNumber: x["Material"],
-              name: name,
-              unit: x["Unit"],
-              ean: x["EanUpc"],
-              free: false,
-              isAmount: amount
-            }
-          )
+      var materials: Material[] = [];
+      tmpMaterial.d.results[0].toMean.results.forEach((x: any) => {
+        materials.push(
+          {
+            materialNumber: x["Material"],
+            name: name,
+            unit: x["Unit"],
+            ean: x["EanUpc"],
+            free: false,
+            isAmount: amount
+          }
+        )
       });
       return materials;
     }
-    
+
     catch (error) {
-     return [];
+      return [];
     }
   }
 
@@ -456,15 +453,15 @@ export class WareneinangComponent implements OnInit {
   }
 
   createNewMaterial(newMat: Material, amount: number) {
-        newMat.isAmount = amount;
-        newMat.sollAmount = 0;
-        newMat.orderNumber = this.orderNumber;
-        newMat.position = 90000 + (this.newMaterialCounter++) * 10;
-        newMat.PoManu = "X";
+    newMat.isAmount = amount;
+    newMat.sollAmount = 0;
+    newMat.orderNumber = this.orderNumber;
+    newMat.position = 90000 + (this.newMaterialCounter++) * 10;
+    newMat.PoManu = "X";
   }
 
-  deleteSelectedMaterial(){
-    if(this.deleteMaterial != undefined){
+  deleteSelectedMaterial() {
+    if (this.deleteMaterial != undefined) {
       this.deleteNewMaterial(this.deleteMaterial);
     }
     this.closeAreYouSureToDeleteModal();
@@ -480,26 +477,26 @@ export class WareneinangComponent implements OnInit {
     }
   }
 
-  changeIsFree(mat: Material){
+  changeIsFree(mat: Material) {
     console.log("Checkbox isFree");
-    if(mat.free){
+    if (mat.free) {
       mat.free = false;
       console.log(mat.free);
       return;
     }
-    if(!mat.free){
+    if (!mat.free) {
       mat.free = true;
       console.log(mat.free);
       return;
     }
   }
 
-  computeAllMaterialsWithDifference() { 
+  computeAllMaterialsWithDifference() {
     this.materialsWithDifference = this.materials?.filter(material => material.isAmount !== material.sollAmount);
   }
 
   prepareBooking() {
-    if (this.orderNumber == null) {
+    if (this.orderNumber == null || this.orderNumber == "0" || this.orderNumber == "") {
       this.toastr.warning("Bitte gib eine Bestellnummer an");
       return;
     }
@@ -509,8 +506,8 @@ export class WareneinangComponent implements OnInit {
     }
     this.computeAllMaterialsWithDifference();
     this.closeAreYouSureToBookModal();
-    if(this.materialsWithDifference?.length != 0){
-      this.openShowDifferencesModal();  
+    if (this.materialsWithDifference?.length != 0) {
+      this.openShowDifferencesModal();
     }
     this.closeAreYouSureToBookModal();
   }
@@ -528,7 +525,7 @@ export class WareneinangComponent implements OnInit {
     })
     this.closeShowDifferencesModal();
     this.bookToSAP(this.orderToBook);
-    
+
   }
 
   materialToOrderItem(mat: Material): OrderItem {
@@ -612,13 +609,15 @@ export class WareneinangComponent implements OnInit {
   }
 
   cancel() {
-   this.clearAll();
+    this.clearAll();
   }
 
-  clearAll(){
+  clearAll() {
     this.order = undefined;
     this.dataSource = [];
     this.orderNumber = undefined;
+    this.orderToBook = undefined;
+    this.order = undefined;
     this.supplierNumber = undefined;
     this.materials = undefined;
     this.showSelectedOrder = false;
