@@ -280,14 +280,14 @@ export class WareneinangComponent implements OnInit {
     if (this.displayedPositions.length > 1) {
       this.openSelectPositionModal();
     } else {
-      this.onAddMaterial();
+      await this.onAddMaterial();
       this.selectedPosition = -1
       this.displayedPositions = [];
     }
     //clear input fields 
-    this.addMaterialForm.controls['matNumberInput'].setValue("");
-    this.addMaterialForm.controls['eanInput'].setValue("");
-    this.addMaterialForm.controls['amountInput'].setValue("");
+    //this.addMaterialForm.controls['matNumberInput'].setValue("");
+    //this.addMaterialForm.controls['eanInput'].setValue("");
+    //this.addMaterialForm.controls['amountInput'].setValue("");
 
   }
 
@@ -316,6 +316,7 @@ export class WareneinangComponent implements OnInit {
   async onAddMaterial() {
     var ean = this.addMaterialForm.get('eanInput')?.value;
     var amount = Number.parseInt(this.addMaterialForm.get('amountInput')?.value!);
+    //console.log("Amount: " + amount);
     var matnumber = this.addMaterialForm.get('matNumberInput')?.value;
 
     if (matnumber != "" && ean != "") {
