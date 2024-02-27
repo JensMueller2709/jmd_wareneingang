@@ -267,7 +267,8 @@ export class WareneinangComponent implements OnInit {
   async addMaterial() {
     this.displayedPositions = [];
     var matnumber = this.addMaterialForm.get('matNumberInput')?.value;
-    //console.log("Prüfe " + matnumber + " = " + "amount");
+    var ean = this.addMaterialForm.get('eanInput')?.value;
+    if(ean == ""){ 
     this.materials?.filter((x) => x.materialNumber?.toString() == matnumber?.toString())
       .forEach(y => {
         if (this.displayedPositions != null) {
@@ -276,6 +277,7 @@ export class WareneinangComponent implements OnInit {
           }
         }
       });
+    }
 
     if (this.displayedPositions.length > 1) {
       this.openSelectPositionModal();
@@ -316,7 +318,6 @@ export class WareneinangComponent implements OnInit {
   async onAddMaterial() {
     var ean = this.addMaterialForm.get('eanInput')?.value;
     var amount = Number.parseInt(this.addMaterialForm.get('amountInput')?.value!);
-    //console.log("Amount: " + amount);
     var matnumber = this.addMaterialForm.get('matNumberInput')?.value;
 
     if (matnumber != "" && ean != "") {
@@ -324,25 +325,24 @@ export class WareneinangComponent implements OnInit {
       return;
     }
     if (amount == null || Number.isNaN(amount)) {
-      //console.log("here: " + amount)
       this.toastr.warning("Bitte eine Menge angeben", "Fehler");
       return;
     }
 
-    var searchedMat = this.materials?.find((mat) => (mat.materialNumber?.toString() == matnumber?.toString()));
+    var searchedMat = ean == "" ? this.materials?.find((mat) => (mat.materialNumber?.toString() == matnumber?.toString())) : null;
     var comparePosition = this.selectedPosition == -1 ? searchedMat?.position : this.selectedPosition;
 
     if (searchedMat == null && matnumber != null && matnumber != "" && this.materials != null && amount != null) {
       console.log(searchedMat + " " + matnumber + " " + amount);
       this.fetchMaterialAndAddToList(matnumber, amount);
-      //console.log(newMat);
+      this.clearInput();
       return;
     }
 
     if (searchedMat == null && ean != null && this.materials != null && amount != null) {
       console.log("EAN: " + ean);
-      let newMat = this.fetchMaterialEAN(ean, amount);
-      //console.log(newMat);
+      this.fetchMaterialEAN(ean, amount);
+      this.clearInput();
       return;
     }
 
@@ -351,6 +351,10 @@ export class WareneinangComponent implements OnInit {
         this.calculateAmount(x, amount);
       }
     })
+    this.clearInput();
+  }
+
+  clearInput(){
     this.addMaterialForm.controls['matNumberInput'].setValue("");
     this.addMaterialForm.controls['eanInput'].setValue("");
     this.addMaterialForm.controls['amountInput'].setValue("");
@@ -410,7 +414,8 @@ export class WareneinangComponent implements OnInit {
       var tmpMaterial = JSON.parse(JSON.stringify(data.body!));
       var name = tmpMaterial.d.results[0].MatlDesc;
       var materials: Material[] = [];
-      tmpMaterial.d.results[0].toMean.results.forEach((x: any) => {
+      tmpMaterial.d.results.forEach((y: any) =>
+      y.toMean.results.forEach((x: any) => {
         materials.push(
           {
             materialNumber: x["Material"],
@@ -421,7 +426,7 @@ export class WareneinangComponent implements OnInit {
             isAmount: amount
           }
         )
-      });
+      }));
       return materials;
     }
 
@@ -466,6 +471,7 @@ export class WareneinangComponent implements OnInit {
       this.deleteNewMaterial(this.deleteMaterial);
     }
     this.closeAreYouSureToDeleteModal();
+    this.clearInput();
   }
 
   deleteNewMaterial(mat: Material) {
@@ -480,6 +486,7 @@ export class WareneinangComponent implements OnInit {
 
   changeIsFree(mat: Material) {
     console.log("Checkbox isFree");
+    this.clearInput();
     if (mat.free) {
       mat.free = false;
       console.log(mat.free);
