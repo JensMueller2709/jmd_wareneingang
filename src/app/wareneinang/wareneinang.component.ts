@@ -513,9 +513,10 @@ export class WareneinangComponent implements OnInit {
       return;
     }
     this.computeAllMaterialsWithDifference();
-    this.closeAreYouSureToBookModal();
     if (this.materialsWithDifference?.length != 0) {
       this.openShowDifferencesModal();
+    } else {
+      this.book();
     }
     this.closeAreYouSureToBookModal();
   }

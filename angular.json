@@ -39,12 +39,12 @@
             ]
           },
           "configurations": {
-            "production": {
-              "outputPath": "dist/jmd-wareneingang-bpt",
+            "bpp": {
+              "outputPath": "dist/jmd-wareneingang-bpp",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.bpp.ts"
                 }
               ],
               "budgets": [
@@ -61,12 +61,34 @@
               ],
               "outputHashing": "all"
             },
-            "test": {
+            "bpt": {
+              "outputPath": "dist/jmd-wareneingang-bpt",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.bpt.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "bpe": {
               "outputPath": "dist/jmd-wareneingang-bpe",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.test.ts"
+                  "with": "src/environments/environment.bpe.ts"
                 }
               ],
               "budgets": [
