@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialService } from 'src/api/materialService';
 import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
 import { HeaderTitleService } from 'src/service/headerTitle.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { HeaderTitleService } from 'src/service/headerTitle.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    NgxSpinnerModule,
     BrowserAnimationsModule,
     HttpClientModule,
     ToastrModule.forRoot({

@@ -158,7 +158,8 @@
               <tr>
                 <td style="font-size: large;">Bestellung: {{best}}</td>
                 <td>
-                  <button class="btn btn-primary" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseOrder' + i" role="button">
+                  <button class="btn btn-primary" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseOrder' + i"
+                    role="button">
                     Material anzeigen/ausblenden
                   </button>
                 </td>
@@ -178,7 +179,7 @@
                         <th scope="col">Bestellmenge</th>
                       </tr>
                     </thead>
-  
+
                     <tbody>
                       <ng-container *ngFor="let mat of orders.get(best);">
                         <tr>
@@ -453,3 +454,7 @@
     </div>
   </div>
 </div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="pacman" [fullScreen]="true">
+  <p style="color: white"> Führe Buchung durch... </p>
+</ngx-spinner>

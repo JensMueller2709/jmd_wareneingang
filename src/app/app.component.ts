@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { HeaderTitleService } from 'src/service/headerTitle.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit{
   }
   userName : string = "";
   title = "";
+  env = ""
 
   ngOnInit() {
     this.userName = this.cookieService.get("user");
@@ -23,6 +25,7 @@ export class AppComponent implements OnInit{
       this.title = updatedTitle;
     });
     this.headerTitleService.setTitle(this.userName)
+    this.env = environment.name;
   }
 
   logout(){

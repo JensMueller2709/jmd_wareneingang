@@ -4,6 +4,7 @@ import { Order } from 'src/model/order';
 import { Material } from 'src/model/material';
 import { OrderService } from 'src/api/orderService';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import { FormControl, FormGroup } from '@angular/forms';
 import { MaterialService } from 'src/api/materialService';
@@ -25,7 +26,8 @@ export class WareneinangComponent implements OnInit {
     private materialService: MaterialService,
     private orderService: OrderService,
     private toastr: ToastrService,
-    private headerTitleService: HeaderTitleService
+    private headerTitleService: HeaderTitleService,
+    private spinner: NgxSpinnerService
   ) {
 
   }
@@ -567,54 +569,58 @@ export class WareneinangComponent implements OnInit {
   }
 
   bookToSAP(orderToBook: OrderToBook) {
-    if (this.orderToBook == undefined) {
+    if (!this.orderToBook) {
       this.toastr.warning("Keine Buchung vorhanden");
       return;
     }
-    var token = "unused";
+    this.spinner.show(); // Start the spinner
+    const token = "unused";
     this.orderService.book(this.username, this.password, orderToBook, token)
-      .subscribe(data => {
-        //console.log(JSON.stringify(data.body!));
-        const tmpBookingResponse = JSON.parse(JSON.stringify(data.body!));
-        try {
-          var messages: string[] = [];
-          var isError = false;
-          tmpBookingResponse.d.PurchaseOrderResultSet.results.forEach((x: { Message: string; Type: string; }) => {
-            if (!messages.includes(x.Message)) {
-              messages.push(x.Message);
-            }
-            if (x.Type == "E") {
-              isError = true
-            }
-          })
+      .subscribe({
+        next: data => {
+          const tmpBookingResponse = JSON.parse(JSON.stringify(data.body!));
+          try {
+            const messages: string[] = [];
+            let isError = false;
+            tmpBookingResponse.d.PurchaseOrderResultSet.results.forEach((x: { Message: string; Type: string; }) => {
+              if (!messages.includes(x.Message)) {
+                messages.push(x.Message);
+              }
+              if (x.Type === "E") {
+                isError = true;
+              }
+            });
 
-          var message = "";
-          messages.forEach(x => {
-            message = message + "----\n" + x;
-          })
-          if (isError && messages.length != 0) {
-            this.toastr.error(message, "Bestellung konnte nicht gebucht werden", { timeOut: 0, extendedTimeOut: 0 });
+            let message = "";
+            messages.forEach(x => {
+              message += "----\n" + x;
+            });
+            if (isError && messages.length !== 0) {
+              this.toastr.error(message, "Bestellung konnte nicht gebucht werden", { timeOut: 0, extendedTimeOut: 0 });
+              this.spinner.hide(); // Stop the spinner
+              return;
+            } else {
+              this.toastr.info(message, "Bestellung wurde gebucht. Info", { timeOut: 0, extendedTimeOut: 0 });
+            }
+          } catch (error) {
+            console.log(error);
+            this.toastr.error("Bestellung konnte nicht gebucht werden");
+            this.spinner.hide(); // Stop the spinner
             return;
-          } else {
-            this.toastr.info(message, "Bestellung wurde gebucht. Info", { timeOut: 0, extendedTimeOut: 0 });
           }
-        }
-        catch (error) {
+          this.showSelectedOrder = false;
+          this.extendedSearch = false;
+          this.newMaterialCounter = 0;
+          this.toastr.success("Bestellung gebucht", "");
+          this.clearAll();
+          this.spinner.hide(); // Stop the spinner
+        },
+        error: error => {
           console.log(error);
-          this.toastr.error("Bestellung konnte nicht gebucht werden");
-          return;
-        }
-        this.showSelectedOrder = false;
-        this.extendedSearch = false;
-        this.newMaterialCounter = 0;
-        this.toastr.success("Bestellung gebucht", "");
-        this.clearAll();
-      },
-        error => {
-          console.log(error)
           this.toastr.error(error.message, "Fehler");
+          this.spinner.hide(); // Stop the spinner
         }
-      )
+      });
   }
 
   cancel() {

@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    name: 'local',
     loginUrl: 'assets/user.json',
     materialUrl: 'assets/material.json',
     materialEanUrl: 'assets/material.json',
