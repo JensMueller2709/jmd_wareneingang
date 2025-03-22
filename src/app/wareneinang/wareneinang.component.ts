@@ -667,7 +667,7 @@ export class WareneinangComponent implements OnInit {
     this.lieferscheinNummer = undefined;
     this.areYouSureToCancel = "none";
     this.newMaterialCounter = 0;
-    this.headerTitleService.setTitle(this.username);
+    this.headerTitleService.setTitle(this.username + " - " + this.selectedPlant);
     this.BestellungForm.reset();
     this.addMaterialForm.reset();
     this.lieferantennummerForm.reset();
@@ -709,7 +709,7 @@ export class WareneinangComponent implements OnInit {
       var materials = this.parseMaterials(tmpOrder.d.results);
       materials.forEach(mat => {
         if (mat.orderNumber != null) {
-          if (!this.orders.has(mat.orderNumber)) {
+          if (!this.orders.has(mat.orderNumber) && mat.plant == this.selectedPlant) {
             this.orders.set(mat.orderNumber, [mat])
             this.dataSourceBestellung?.push(mat.orderNumber);
           } else {
