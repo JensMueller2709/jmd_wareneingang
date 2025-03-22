@@ -8,7 +8,7 @@ import { environment } from './../environments/environment';
 export class OrderService {
   constructor(private http: HttpClient) { }
 
-  getOrder(username: string, password: string, orderNumber: string): Observable<HttpResponse<String>> {
+  getOrder(username: string, password: string, orderNumber: string, plant: string): Observable<HttpResponse<String>> {
     //var orderUrl = "https://svmlwbpe01.mysug.de:443/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/SearchOpenPurchaseOrderSet"
     //var orderUrl = "assets/order.json"
     var orderUrl = environment.orderUrl;
@@ -16,7 +16,7 @@ export class OrderService {
     .set('Content-Type', 'application/json');
     return this.http.get<String>(orderUrl, {
       params: {
-        $filter: "PoNumber eq '" + orderNumber + "' and Plant eq '9600'",
+        $filter: "PoNumber eq '" + orderNumber + "' and Plant eq '" + plant + "'",
         $format: "json"
       },
       headers: myHeaders,
@@ -24,7 +24,7 @@ export class OrderService {
     });
   }
 
-  getOrderBySupplierNumber(username: string, password: string, supplierNumber: string): Observable<HttpResponse<String>> {
+  getOrderBySupplierNumber(username: string, password: string, supplierNumber: string, plant: string): Observable<HttpResponse<String>> {
     //var orderUrl = "https://svmlwbpe01.mysug.de:443/sap/opu/odata/sap/ZMM_API_PURCHASEORDER_SERVICE_SRV/SearchOpenPurchaseOrderSet"
     //var orderUrl = "assets/orders.json"
     var orderUrl = environment.orderUrl;
@@ -32,7 +32,7 @@ export class OrderService {
     .set('Content-Type', 'application/json');
     return this.http.get<String>(orderUrl, {
       params: {
-        $filter: "Vendor eq '" + supplierNumber + "' and Plant eq '9600'",
+        $filter: "Vendor eq '" + supplierNumber + "' and Plant eq '" + plant + "'",
         $format: "json"
       },
       headers: myHeaders,

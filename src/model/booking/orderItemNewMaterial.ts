@@ -4,7 +4,7 @@ export interface OrderItemNewMaterial extends OrderItem {
     PoManu : "X",
     Vendor : string,
     Material: string,
-    Plant : "9600",
+    Plant : string,
     StgeLoc : "1012",
     DeleteInd : "",
     ShortText : string,

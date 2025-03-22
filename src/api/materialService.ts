@@ -9,7 +9,7 @@ export class MaterialService {
 
   public defaultHeaders = new HttpHeaders();
 
-  getMaterialByMatNumber(username: string, password: string, materialNumber: string): Observable<HttpResponse<String>> {
+  getMaterialByMatNumber(username: string, password: string, materialNumber: string, plant: string): Observable<HttpResponse<String>> {
     //var materialURL = "https://SVMLWBPE01.mysug.de:443/sap/opu/odata/sap/ZMM_API_MATERIALDATA_SERVICE_SRV/SearchMaterialPlantSet"
     //var materialURL = "assets/material.json"
     var materialURL = environment.materialUrl;
@@ -17,7 +17,7 @@ export class MaterialService {
       .set('Content-Type', 'application/json');
     return this.http.get<String>(materialURL, {
       params: {
-        $filter: "Material eq '" + materialNumber + "' and Plant eq '9600'",
+        $filter: "Material eq '" + materialNumber + "' and Plant eq '" + plant + "'",
         $format: "json",
         $expand: "toMean"
       },
@@ -26,7 +26,7 @@ export class MaterialService {
     });
   }
 
-  getMaterialByEAN(username: string, password: string, ean: string): Observable<HttpResponse<String>> {
+  getMaterialByEAN(username: string, password: string, ean: string, plant: string): Observable<HttpResponse<String>> {
     //var materialURL = "https://SVMLWBPE01.mysug.de:443/sap/opu/odata/sap/ZMM_API_MATERIALDATA_SERVICE_SRV/SearchMaterialPlantSet"
     //var materialURL = "assets/material.json"
     var materialURL = environment.materialEanUrl;
@@ -34,7 +34,7 @@ export class MaterialService {
       .set('Content-Type', 'application/json');
     return this.http.get<String>(materialURL, {
       params: {
-        $filter: "EanUpc eq '" + ean + "' and Plant eq '9600'",
+        $filter: "EanUpc eq '" + ean + "' and Plant eq '" + plant + "'",
         $format: "json",
         $expand: "toMean"
       },

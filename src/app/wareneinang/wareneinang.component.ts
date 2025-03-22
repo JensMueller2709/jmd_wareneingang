@@ -73,6 +73,9 @@ export class WareneinangComponent implements OnInit {
   areYouSureToDelete = "none";
   showDifferencesModal = 'none';
 
+  dropdownPlants: string[] = ['9600', '9670'];
+  selectedPlant: string = ''; 
+
   openEANModal(): void {
     this.displayEANModal = "block";
   }
@@ -149,6 +152,14 @@ export class WareneinangComponent implements OnInit {
     this.username = this.cookieService.get("user");
     this.password = this.cookieService.getSecure("password");
     this.newMaterialCounter = 0;
+      // Lade den `plant`-Wert aus den Cookies
+  const savedPlant = this.cookieService.get("plant");
+  if (savedPlant && this.dropdownPlants.includes(savedPlant)) {
+    this.selectedPlant = savedPlant; // Setze den gespeicherten Wert als ausgewählt
+    this.headerTitleService.addTitle(this.selectedPlant);
+  } else {
+    this.selectedPlant = ''; // Setze einen Standardwert, falls der gespeicherte Wert ungültig ist
+  }
   }
 
   isLoggedIn(): boolean {
@@ -165,9 +176,14 @@ export class WareneinangComponent implements OnInit {
         return;
       }
     }
+
+    if(this.selectedPlant == null || this.selectedPlant == ""){
+      this.toastr.warning("Bitte gib ein Werk an");
+      return;
+    }
     console.log("Bestellnummer: " + this.orderNumber);
 
-    this.orderService.getOrder(this.username, this.password, this.orderNumber)
+    this.orderService.getOrder(this.username, this.password, this.orderNumber, this.selectedPlant)
       .subscribe(data => {
         //console.log(JSON.stringify(data.body!));
         this.parseOrder(JSON.stringify(data.body!));
@@ -198,8 +214,12 @@ export class WareneinangComponent implements OnInit {
       this.toastr.warning("Bitte gib eine Lieferantennummer an");
       return;
     }
+    if(this.selectedPlant == null || this.selectedPlant == ""){
+      this.toastr.warning("Bitte gib ein Werk an");
+      return;
+    }
 
-    this.orderService.getOrderBySupplierNumber(this.username, this.password, this.supplierNumber)
+    this.orderService.getOrderBySupplierNumber(this.username, this.password, this.supplierNumber, this.selectedPlant)
       .subscribe(data => {
         //console.log(JSON.stringify(data.body!));
         this.parseOpenOrdersBySupplier(JSON.stringify(data.body!));
@@ -288,11 +308,13 @@ export class WareneinangComponent implements OnInit {
       this.selectedPosition = -1
       this.displayedPositions = [];
     }
-    //clear input fields 
-    //this.addMaterialForm.controls['matNumberInput'].setValue("");
-    //this.addMaterialForm.controls['eanInput'].setValue("");
-    //this.addMaterialForm.controls['amountInput'].setValue("");
+  }
 
+  onDropdownChange(event: any) {
+    this.selectedPlant = event.target.value;
+    this.headerTitleService.setTitle(this.username + " - " + this.selectedPlant);
+    this.cookieService.save("plant", this.selectedPlant);
+    console.log('Ausgewählte Option:', this.selectedPlant);
   }
 
   selectPosition(pos: number) {
@@ -380,7 +402,7 @@ export class WareneinangComponent implements OnInit {
   }
 
   fetchMaterialAndAddToList(matNumber: string, amount: number): Material {
-    this.materialService.getMaterialByMatNumber(this.username, this.password, matNumber)
+    this.materialService.getMaterialByMatNumber(this.username, this.password, matNumber, this.selectedPlant)
       .subscribe(data => {
         //console.log(JSON.stringify(data.body!));
         this.parseMaterialAndAddToList(data, amount);
@@ -397,7 +419,7 @@ export class WareneinangComponent implements OnInit {
   }
 
   fetchMaterialEAN(ean: string, amount: number): Material {
-    this.materialService.getMaterialByEAN(this.username, this.password, ean)
+    this.materialService.getMaterialByEAN(this.username, this.password, ean, this.selectedPlant)
       .subscribe(data => {
         this.displayedMaterials = this.parseEANMaterials(data, amount);
         this.openEANModal();
@@ -425,7 +447,8 @@ export class WareneinangComponent implements OnInit {
             unit: x["Unit"],
             ean: x["EanUpc"],
             free: false,
-            isAmount: amount
+            isAmount: amount,
+            plant: this.selectedPlant
           }
         )
       }));
@@ -466,6 +489,7 @@ export class WareneinangComponent implements OnInit {
     newMat.orderNumber = this.orderNumber;
     newMat.position = 90000 + (this.newMaterialCounter++) * 10;
     newMat.PoManu = "X";
+    newMat.plant = newMat.plant?.trim() ? newMat.plant : this.selectedPlant;
   }
 
   deleteSelectedMaterial() {
@@ -514,6 +538,10 @@ export class WareneinangComponent implements OnInit {
       this.toastr.warning("Bitte gib eine Lieferscheinnummer an");
       return;
     }
+    if (this.selectedPlant == null || this.selectedPlant == "0" || this.selectedPlant == "") {
+      this.toastr.warning("Bitte gib ein Werk an");
+      return;
+    }
     this.computeAllMaterialsWithDifference();
     if (this.materialsWithDifference?.length != 0) {
       this.openShowDifferencesModal();
@@ -540,7 +568,6 @@ export class WareneinangComponent implements OnInit {
   }
 
   materialToOrderItem(mat: Material): OrderItem {
-    const DEFAULT_PLANT = "9600";
     if (mat.PoManu == "X") {
       return {
         PoItem: mat.position?.toString(),
@@ -549,7 +576,7 @@ export class WareneinangComponent implements OnInit {
         Quantity: mat.isAmount?.toString(),
         DeliveryRefnumber: this.lieferscheinNummer,
         Material: mat.materialNumber,
-        Plant: DEFAULT_PLANT,
+        Plant: mat.plant?.toString(),
         PoManu: "X",
         StgeLoc: mat.lagerort
       }
@@ -561,7 +588,7 @@ export class WareneinangComponent implements OnInit {
         Quantity: mat.isAmount?.toString(),
         DeliveryRefnumber: this.lieferscheinNummer,
         Material: mat.materialNumber,
-        Plant: DEFAULT_PLANT,
+        Plant: mat.plant?.toString(),
         PoManu: "",
         StgeLoc: mat.lagerort
       }
@@ -711,7 +738,8 @@ export class WareneinangComponent implements OnInit {
       orderNumber: data["PoNumber"],
       ean: data["EanUPC"],
       free: data["FreeItem"],
-      lagerort: data["SlocExprc"]
+      lagerort: data["SlocExprc"],
+      plant: data["Plant"]
     }
   }
 
@@ -726,7 +754,8 @@ export class WareneinangComponent implements OnInit {
       unit: data["BaseUom"],
       ean: data["EanUPC"],
       free: false,
-      lagerort: data["SlocExprc"]
+      lagerort: data["SlocExprc"],
+      plant: data["Plant"]
     }
   }
 
