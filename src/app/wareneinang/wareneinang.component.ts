@@ -578,7 +578,8 @@ export class WareneinangComponent implements OnInit {
         Material: mat.materialNumber,
         Plant: mat.plant?.toString(),
         PoManu: "X",
-        StgeLoc: mat.lagerort
+        StgeLoc: mat.lagerort,
+        FreeItem: mat.free
       }
     } else {
       return {
@@ -590,7 +591,8 @@ export class WareneinangComponent implements OnInit {
         Material: mat.materialNumber,
         Plant: mat.plant?.toString(),
         PoManu: "",
-        StgeLoc: mat.lagerort
+        StgeLoc: mat.lagerort,
+        FreeItem: mat.free
       }
     }
   }

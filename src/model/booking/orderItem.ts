@@ -8,4 +8,5 @@ export interface OrderItem {
     Plant : string | undefined;
     StgeLoc : string | undefined;
     Material: string | undefined;
+    FreeItem: boolean | undefined;
 }
