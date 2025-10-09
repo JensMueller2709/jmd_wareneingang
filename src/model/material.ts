@@ -10,6 +10,7 @@ export interface Material {
     PoManu?: string;
     free?: boolean;
     lagerort?: string;
+    plant?: string;
 }
 
 /*

@@ -1,4 +1,11 @@
 
+  .werk{
+    justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 30px;
+  }
   .bestellung{
     justify-content: center;
       align-items: center;

@@ -42,7 +42,7 @@
           },
           "configurations": {
             "bpp": {
-              "outputPath": "dist/jmd-wareneingang-bpp",
+              "outputPath": "dist/jmd-wareneingang_bpp",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -64,7 +64,7 @@
               "outputHashing": "all"
             },
             "bpt": {
-              "outputPath": "dist/jmd-wareneingang-bpt",
+              "outputPath": "dist/jmd-wareneingang_bpt",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -86,7 +86,7 @@
               "outputHashing": "all"
             },
             "bpe": {
-              "outputPath": "dist/jmd-wareneingang-bpe",
+              "outputPath": "dist/jmd-wareneingang_bpe",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
